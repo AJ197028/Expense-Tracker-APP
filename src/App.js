@@ -1,24 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
-
+import Header from "./Components/NavBar/Header";
+import { Navigate, Route, Routes } from "react-router-dom";
+import SignUp from "./Components/SignUp";
+import { useSelector } from "react-redux";
+import MyProfile from "./Components/Pages/MyProfile";
+import Forgotpassword from "./Components/Pages/Forgotpassword";
+import Welcome from "./Components/Pages/Welcome";
+import MyExpense from "./Components/Pages/MyExpense";
+import "../src/Components/NavBar/Header.css";
+import "./App.css";
 function App() {
+  const isauth = useSelector((state) => state.auth.isAuthenticated);
+  const theme = useSelector((state) => state.theme.isDarkMode);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className={theme ? "darkMode-theme-premium" : "App"}>
+        <Header />
+
+        <Routes>
+          <Route
+            path="/"
+            element={isauth ? <Navigate to="/welcome" /> : <SignUp />}
+          />
+          SignUp
+          {isauth && <Route path="/welcome" element={<Welcome />} />}
+          <Route path="/login" element={<SignUp />} />
+          {isauth && <Route path="/MyProfile" element={<MyProfile />} />}
+          {isauth && <Route path="/my-expense" element={<MyExpense />} />}
+          {!isauth && (
+            <Route path="/Forgot-password" element={<Forgotpassword />} />
+          )}
+          <Route path="*" element="/"></Route>
+        </Routes>
+      </div>
+    </>
   );
 }
 
